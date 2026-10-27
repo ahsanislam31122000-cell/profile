@@ -1,0 +1,6 @@
+{
+  "name": "Digital Service Portfolio & Admin Studio",
+  "description": "Professional bilingual digital service portfolio with secure admin dashboard for managing projects, services, profile, inquiries, and site content.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

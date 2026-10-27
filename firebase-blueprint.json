@@ -1,0 +1,62 @@
+{
+  "entities": {
+    "Profile": {
+      "title": "Profile",
+      "description": "Public portfolio author profile and contact links",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string", "maxLength": 100 },
+        "headline": { "type": "object", "description": "Bilingual headline object" },
+        "biography": { "type": "object", "description": "Bilingual biography object" },
+        "profilePhoto": { "type": "string", "maxLength": 1000 },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "whatsapp": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["displayName", "email"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Portfolio case studies and featured works",
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "enum": ["ui-ux", "website-design", "web-dev", "email-copywriting", "ai-automation"] },
+        "isConcept": { "type": "boolean" },
+        "isPublished": { "type": "boolean" },
+        "title": { "type": "object" },
+        "shortDescription": { "type": "object" },
+        "fullCaseStudy": { "type": "object" },
+        "tools": { "type": "array" },
+        "coverImage": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["slug", "category", "isPublished"]
+    },
+    "ContactInquiry": {
+      "title": "ContactInquiry",
+      "description": "Private contact messages submitted by clients",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 150 },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "service": { "type": "string", "maxLength": 100 },
+        "message": { "type": "string", "maxLength": 5000 },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["name", "email", "message"]
+    }
+  },
+  "firestore": {
+    "/profiles/{profileId}": {
+      "schema": "Profile",
+      "description": "Public profile configuration"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Portfolio project collection"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": "ContactInquiry",
+      "description": "Private client messages - only accessible by admin"
+    }
+  }
+}

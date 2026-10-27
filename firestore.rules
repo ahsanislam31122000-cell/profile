@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email == "ahsanislam31122000@gmail.com" && request.auth.token.email_verified == true)
+      );
+    }
+
+    // Profiles: Anyone can read, only admin can write
+    match /profiles/{profileId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Services: Anyone can read published services, only admin can write
+    match /services/{serviceId} {
+      allow read: if resource.data.isPublished == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Projects: Public can only read published projects, admin can read all and write
+    match /projects/{projectId} {
+      allow read: if resource.data.isPublished == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Site Settings: Anyone can read, only admin can write
+    match /site_settings/{settingsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Inquiries: Anyone can insert, only admin can read, update, or delete
+    match /inquiries/{inquiryId} {
+      allow create: if request.resource.data.name is string &&
+                       request.resource.data.email is string &&
+                       request.resource.data.message is string &&
+                       request.resource.data.message.size() >= 5;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
